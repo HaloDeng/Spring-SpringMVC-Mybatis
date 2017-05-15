@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"     
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+       xmlns:p="http://www.springframework.org/schema/p"     
+       xmlns:context="http://www.springframework.org/schema/context" 
+       xmlns:jpa="http://www.springframework.org/schema/data/jpa" 
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       
+   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd   
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd   
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd   
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+      
+       <!-- 扫描包 -->
+       <context:component-scan base-package="com.halo.controller">
+       <!-- 扫描时不需要扫描services,避免事务失效
+       		Spring MVC启动时的配置文件，包含组件扫描、url映射以及设置freemarker参数，让spring不扫描带有@Service注解的类。为什么要这样设置？因为servlet-context.xml与service-context.xml不是同时加载，
+       		如果不进行这样的设置，那么，spring就会将所有带@Service注解的类都扫描到容器中，等到加载service-context.xml的时候，会因为容器已经存在Service类，使得cglib将不对Service进行代理，直接导致的结果就是
+       		在service-context中的事务配置不起作用，发生异常时，无法对数据进行回滚。
+       		详细请看：http://www.voidcn.com/blog/zhouzhiwengang/article/p-5765162.html
+       
+       -->
+      		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service"/>
+       </context:component-scan>
+       <!-- 自动注册一个HandlerMapping和HandlerAdapter。不需要单独去配置了 -->
+	   <mvc:annotation-driven/>
+	 
+		<!-- 视图解析器 -->
+		<bean id="viewResolver"
+			class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+			<property name="prefix" value="/WEB-INF/views/"></property>
+			<property name="suffix" value=".jsp"></property>
+		</bean>
+		
+		<!-- 文件上传 没有不需要配置 -->
+		<bean id="multipartResolver"
+			class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+			<!-- 默认编码 -->
+			<property name="defaultEncoding" value="utf-8" />
+			<!-- 文件大小最大值 -->
+			<property name="maxUploadSize" value="10485760000" />
+			<!-- 内存中的最大值 -->
+			<property name="maxInMemorySize" value="40960" />
+		</bean>	
+		
+		
+   		
+       
+</beans>

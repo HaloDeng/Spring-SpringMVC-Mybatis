@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+		xmlns:context="http://www.springframework.org/schema/context"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:aop="http://www.springframework.org/schema/aop"
+		xmlns:tx="http://www.springframework.org/schema/tx"
+		xsi:schemaLocation="
+			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+			http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+			http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+			http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+	<description>Spring Configuration</description>
+	<context:property-placeholder location="classpath:database.properties" />
+	<context:component-scan base-package="com.halo.*">
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+		
+	</context:component-scan>
+	
+	<!-- datasource -->	
+	<bean id="datasource" class="${datasource}" destroy-method="close">
+		<property name="driverClassName" value="${driver}"/>
+		<property name="url" value="${url}"/>
+		<property name="username" value="${name}"/>
+		<property name="password" value="${password}"/>
+		<!--配置druid的时候只需配置maxActive和minIdle,minActive和MaxIdle不用配，配了会有一个maxIdle is deprecated 
+			具体配置看这：https://github.com/alibaba/druid/wiki/DruidDataSource%E9%85%8D%E7%BD%AE
+		-->
+		<property name="maxActive" value="20"/>
+		<property name="minIdle" value="1"/>
+		<property name="maxWait" value="60000"></property>
+	</bean>
+	
+	<!-- sqlsessionFactory -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="configLocation" value="classpath:MybatisConfig.xml"/>
+		<property name="dataSource" ref="datasource"/>
+		<!-- 如果mapper.xml和对应接口不在同一个包下需要制定mapper.xml位置，如果在同一个包下不需要，mybatis会自动匹配 -->
+		<property name="mapperLocations" value="classpath:/mappers/*.xml"/>
+	</bean>
+	
+	
+	<!-- 简化配置，自动扫描包 ，自动读取包下的接口  使用自动扫描需要添加sqlSessionFactoryBeanName，不然读取不出配置文件（datasource.properties）内容 
+		详细了解：http://www.mybatis.org/spring/zh/mappers.html
+	-->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer"> 
+		<property name="basePackage" value="com.halo.dao"></property>
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+	</bean>
+	
+	<!-- 如果不用简化配置需要一个个配置mapper映射器，即接口
+	 <bean id="userDAO" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="com.halo.dao.UserDAO"/>
+		<property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+	</bean>-->
+	
+	
+	
+	<!-- 事务配置 -->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="datasource"></property>
+	</bean>
+	<!-- 开启声明式事务  -->
+	<tx:annotation-driven transaction-manager="transactionManager"/>
+	<!-- 如果开启声明式事务，下面的可以不用配了 -->
+	<!-- 
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="delete*" propagation="REQUIRED" rollback-for="Exception"/>
+			<tx:method name="add*" propagation="REQUIRED" rollback-for="Exception"/>
+			<tx:method name="save*" propagation="REQUIRED" rollback-for="Exception"/>
+			<tx:method name="update*" propagation="REQUIRED" rollback-for="Exception"/>
+			<tx:method name="create*" propagation="REQUIRED" rollback-for="Exception"/>
+			<tx:method name="merge*" propagation="REQUIRED" rollback-for="Exception"/>
+			<tx:method name="revoke*" propagation="REQUIRED" rollback-for="Exception"/>
+			<tx:method name="*" propagation="SUPPORTS"/>
+		</tx:attributes>
+	</tx:advice>
+	<aop:config>
+		<aop:pointcut expression="execution(* main.java.com.halo.service.*.*(..))" id="businessService"/>
+		<aop:advisor advice-ref="" pointcut-ref="businessService"/>
+	</aop:config>
+	 -->
+
+	 
+
+</beans>

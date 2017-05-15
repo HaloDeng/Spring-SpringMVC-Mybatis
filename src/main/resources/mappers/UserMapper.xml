@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<!-- 名称空间，指定该映射文件对应的接口，（本人也没搞怎么明白，可能理解有点问题
+	但我想接口跟映射文件之间肯定是用什么东西关联起来的，既然接口文件名跟映射文件名不同则不可能是根据文件名来对应，
+	只有通过制定名称空间来关联了
+） -->
+<mapper namespace="com.halo.dao.UserDAO">
+	
+	<!-- 如果多处sql中频繁用到这几个字段可以将其抽离出来成一个sql,在其他select节点中可以直接include进去 -->
+	<sql id="userColoums">
+		id as userId,
+		name as userName,
+		password as password,
+		phone as phoneNum,
+		regist_time as registDate,
+		email as email
+	</sql>
+	<!-- select语句，其中id要和DAO中的方法名相同 -->
+	<select id="getUserById" resultType="user">
+		SELECT 
+		<include refid="userColoums"></include>
+		from user 
+		<where>
+		 id = #{userId}
+		 </where>
+	</select>
+	
+	<!-- 插入主键自增记录并返回主键，mysql做法，当查询完成后可以在controller中打印出生成的id。oracle复杂一些 -->
+	<insert id="addOne" useGeneratedKeys="true" keyProperty="userId">
+		insert into user(name,password,phone,regist_time,email)
+		values(#{userName},#{password},#{phoneNum},now(),#{email})
+	</insert>
+	
+	
+	<select id="getUserByName" resultType="user">
+		SELECT
+		<include refid="userColoums"></include>
+		from user 
+		<where>
+		 name = #{userName}
+		 </where>
+	</select>
+
+</mapper>

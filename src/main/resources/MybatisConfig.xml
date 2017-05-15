@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+  <configuration>
+  	<properties>  
+        <property name="dialect" value="mysql" />  
+    </properties>  
+ 	<settings>
+ 		<setting name="lazyLoadingEnabled" value="true"/>
+ 		<setting name="aggressiveLazyLoading" value="false"/>
+ 		<setting name="cacheEnabled" value="true"/>
+ 		 <setting name="logImpl" value="LOG4J" />
+ 	</settings>
+  	<!-- 配置别名，指定包名，该包名下的实体别名自动为首字母小写的类名 ,配置别名后在mapper.xml（eg UserMapper.xml）中使用实体时
+  	可以直接使用别名而不是包名+类名,也可以一个个配置 。
+  	如果有实体类上有注解@Alias("name")将使用注解上的别名
+  	-->
+  	<typeAliases>
+  		<!-- 一个个配置别名
+  		 <typeAlias type="com.domain.Student" alias="Student"/>   -->
+  		<package name="com.halo.entity"/>
+  	</typeAliases>
+  
+  </configuration>
