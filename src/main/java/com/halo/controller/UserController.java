@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.halo.entity.User;
 import com.halo.service.UserService;
+import com.halo.utils.GenerateUUID;
 
 @Controller
 @RequestMapping("/user")
@@ -16,7 +17,7 @@ public class UserController {
 	
 	@RequestMapping(value="/userInfo.do")
 	public String userInfo(User user){
-		user.setUserId(1);
+		//user.setUserId(1);
 		User u = userService.getUser(user);
 		//返回视图名
 		return "UserList";
@@ -33,6 +34,7 @@ public class UserController {
 
 	@RequestMapping(value="/addUser.do")
 	public String addUser(User user){
+		user.setUserId(GenerateUUID.getUUID());
 		user.setUserName("admin");
 		user.setPassword("halo");
 		user.setPhoneNum("13517190241");
@@ -44,6 +46,7 @@ public class UserController {
 	
 	@RequestMapping(value="/addUserForTx.do")
 	public String addUserForTx(User user){
+		user.setUserId(GenerateUUID.getUUID());
 		user.setUserName("admin");
 		user.setPassword("halo");
 		user.setPhoneNum("13517190241");

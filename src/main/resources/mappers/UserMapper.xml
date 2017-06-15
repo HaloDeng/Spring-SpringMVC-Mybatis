@@ -14,7 +14,8 @@
 		password as password,
 		phone as phoneNum,
 		regist_time as registDate,
-		email as email
+		email as email,
+		role as userRole
 	</sql>
 	<!-- select语句，其中id要和DAO中的方法名相同 -->
 	<select id="getUserById" resultType="user">
@@ -32,6 +33,11 @@
 		values(#{userName},#{password},#{phoneNum},now(),#{email})
 	</insert>
 	
+	<insert id="register">
+		insert into user(id,name,password,phone,regist_time,email,role)
+		values(#{userId},#{userName},#{password},#{phoneNum},now(),#{email},#{userRole})
+	</insert>
+	
 	
 	<select id="getUserByName" resultType="user">
 		SELECT
@@ -41,5 +47,21 @@
 		 name = #{userName}
 		 </where>
 	</select>
+	
+	<select id="login" resultType="user">
+		SELECT 
+		<include refid="userColoums"/>
+		from user
+		<where>
+		name = #{name} and password = #{passWord}
+		</where>
+	</select>
+	
+	
+	
+	
+	
+	
+	
 
 </mapper>

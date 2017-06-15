@@ -4,17 +4,19 @@ import java.util.Date;
 
 public class User {
 	
-	private int userId;
+	private String userId;
 	private String userName;
 	private String password;
 	private String phoneNum;
 	private String email;
 	private Date registDate;
+	private String userRole;
 	
-	public int getUserId() {
+	
+	public String getUserId() {
 		return userId;
 	}
-	public void setUserId(int userId) {
+	public void setUserId(String userId) {
 		this.userId = userId;
 	}
 	public String getUserName() {
@@ -46,6 +48,12 @@ public class User {
 	}
 	public void setRegistDate(Date registDate) {
 		this.registDate = registDate;
+	}
+	public String getUserRole() {
+		return userRole;
+	}
+	public void setUserRole(String userRole) {
+		this.userRole = userRole;
 	}
 	
 	

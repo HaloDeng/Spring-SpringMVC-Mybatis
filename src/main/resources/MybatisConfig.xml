@@ -10,6 +10,7 @@
  		<setting name="lazyLoadingEnabled" value="true"/>
  		<setting name="aggressiveLazyLoading" value="false"/>
  		<setting name="cacheEnabled" value="true"/>
+ 		<!-- 指定log日志实现为log4j -->
  		 <setting name="logImpl" value="LOG4J" />
  	</settings>
   	<!-- 配置别名，指定包名，该包名下的实体别名自动为首字母小写的类名 ,配置别名后在mapper.xml（eg UserMapper.xml）中使用实体时
